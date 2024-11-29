@@ -1,5 +1,5 @@
 export interface Service {
-  //todo: id: string;
+  id: string;
   title: string;
   isAvailableOnline: boolean;
   isActive: boolean;

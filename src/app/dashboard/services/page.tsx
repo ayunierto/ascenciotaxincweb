@@ -80,7 +80,9 @@ export default function ServicesPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <Link href={`/dashboard/services/edit/${service.id}`}>
+                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem>View</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="focus:bg-red-500">

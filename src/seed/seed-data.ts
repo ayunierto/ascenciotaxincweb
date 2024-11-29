@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 
 interface SeedService {
+  id: string;
   title: string;
   isAvailableOnline: boolean;
   isActive: boolean;
@@ -47,6 +48,7 @@ export const initialData: SeedData = {
   ],
   services: [
     {
+      id: '1',
       title: 'In-person Tax Filing (Walk-in)',
       isAvailableOnline: false,
       isActive: true,
@@ -56,6 +58,7 @@ export const initialData: SeedData = {
       ],
     },
     {
+      id: '2',
       title: 'Personal Income Tax',
       isAvailableOnline: true,
       isActive: true,
@@ -65,6 +68,7 @@ export const initialData: SeedData = {
       ],
     },
     {
+      id: '3',
       title: 'Corporate Taxes',
       isAvailableOnline: true,
       isActive: true,
@@ -74,6 +78,7 @@ export const initialData: SeedData = {
       ],
     },
     {
+      id: '4',
       title: 'Self-Employed & Small Business Tax',
       isAvailableOnline: true,
       isActive: true,
@@ -83,15 +88,17 @@ export const initialData: SeedData = {
       ],
     },
     {
+      id: '5',
       title: 'GST/HST or WSIB Report',
       isAvailableOnline: true,
       isActive: true,
       duration: '45 min',
       images: [
-        'https://static.wixstatic.com/media/aa0f39_e73f1095…o/aa0f39_e73f109535a947268a55a563aa3b0e2c~mv2.jpg',
+        'https://static.wixstatic.com/media/aa0f39_e73f109535a947268a55a563aa3b0e2c~mv2.jpg/v1/fill/w_266,h_172,fp_0.50_0.50,lg_1,q_80,enc_auto/aa0f39_e73f109535a947268a55a563aa3b0e2c~mv2.jpg',
       ],
     },
     {
+      id: '6',
       title: 'Business Registration',
       isAvailableOnline: true,
       isActive: true,
@@ -101,6 +108,7 @@ export const initialData: SeedData = {
       ],
     },
     {
+      id: '7',
       title: 'Rental Income Taxes',
       isAvailableOnline: true,
       isActive: true,
@@ -110,6 +118,7 @@ export const initialData: SeedData = {
       ],
     },
     {
+      id: '8',
       title: 'Social insurance number for non-resident',
       isAvailableOnline: true,
       isActive: true,
@@ -119,6 +128,7 @@ export const initialData: SeedData = {
       ],
     },
     {
+      id: '9',
       title: 'Canada Child Benefit Application',
       isAvailableOnline: true,
       isActive: true,
@@ -128,6 +138,7 @@ export const initialData: SeedData = {
       ],
     },
     {
+      id: '10',
       title: 'Canada Pension Plan(CPP) Application',
       isAvailableOnline: true,
       isActive: true,
@@ -137,6 +148,7 @@ export const initialData: SeedData = {
       ],
     },
     {
+      id: '11',
       title: 'Old Age Security Application',
       isAvailableOnline: true,
       isActive: true,

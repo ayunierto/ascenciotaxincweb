@@ -1,4 +1,4 @@
-import { AppSidebar } from '@/components/app-sidebar';
+import { DashboardSidebar } from '@/components/dashboard-sidebar';
 import { ModeToggle } from '@/components/ModeToggle';
 import {
   Breadcrumb,
@@ -23,7 +23,7 @@ export default function DashboardLayout({
   return (
     <div>
       <SidebarProvider>
-        <AppSidebar />
+        <DashboardSidebar />
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 pr-4">
             <div className="flex items-center gap-2 px-4 mr-auto">
@@ -32,7 +32,7 @@ export default function DashboardLayout({
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                    <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>
