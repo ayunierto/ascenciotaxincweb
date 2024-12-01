@@ -84,7 +84,7 @@ const data = {
         },
         {
           title: 'Add service',
-          url: '#',
+          url: '/dashboard/services/add',
         },
       ],
     },

@@ -5,5 +5,10 @@ export interface Service {
   isActive: boolean;
   duration: string;
   description?: string;
-  images: string[];
+  images: Images[];
+}
+
+interface Images {
+  id: string;
+  url: string;
 }
