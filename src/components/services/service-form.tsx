@@ -16,8 +16,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Service } from '@/interfaces';
-import { Checkbox } from './ui/checkbox';
+import { Checkbox } from '../ui/checkbox';
+import { Service } from '@/domain/entities/service';
+import { updateCreateService } from '../../actions/services/update-create';
 
 interface Props {
   service?: Service;
@@ -26,6 +27,7 @@ interface Props {
 export default function ServiceForm({ service }: Props) {
   // Create a form schema
   const formSchema = z.object({
+    id: z.string(),
     title: z.string().min(2, {
       message: 'Name must be at least 2 characters.',
     }),
@@ -54,6 +56,7 @@ export default function ServiceForm({ service }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: service?.id || 'new',
       title: service?.title || '',
       isAvailableOnline: service?.isAvailableOnline || false,
       isActive: service?.isActive || false,
@@ -62,10 +65,10 @@ export default function ServiceForm({ service }: Props) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const data = await updateCreateService(values);
+    console.log({ data });
   }
 
   const serviceImage = service?.images[0].url || '/noImage.jpg';

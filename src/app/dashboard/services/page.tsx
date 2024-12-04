@@ -21,12 +21,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { MoreHorizontal, Plus } from 'lucide-react';
-import { Service } from '@/interfaces';
-import DashboardBreadcrumb from '@/components/dashboard-breadcrumb';
+import DashboardBreadcrumb from '@/components/dashboard/dashboard-breadcrumb';
+
+import { getServices } from '@/actions/services/get-services';
 
 export default async function ServicesPage() {
-  const data = await fetch(`${process.env.API_URL_BASE}/services`);
-  const services: Service[] = await data.json();
+  const services = await getServices();
+
   return (
     <>
       <DashboardBreadcrumb
@@ -73,7 +74,8 @@ export default async function ServicesPage() {
               <TableRow key={service.title}>
                 <TableCell className="flex items-center gap-2">
                   <Avatar>
-                    <AvatarImage src={service.images[0].url} />
+                    {}
+                    <AvatarImage src={service.images[0]?.url} />
                     <AvatarFallback>{service.title[0]}</AvatarFallback>
                   </Avatar>
                   {service.title}

@@ -1,28 +1,19 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import { Menu, UserRound } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
+import { useAuthStore } from '@/store/auth-store';
+import { ItemsHomeMenu } from '@/interfaces';
+import HomeSidebar from '@/components/home/sidebar';
 
-interface ItemsSideMenu {
-  url: string;
-  title: string;
-}
-
-const itemsSideMenu: ItemsSideMenu[] = [
+const itemsHomeMenu: ItemsHomeMenu[] = [
   {
     url: '/',
     title: 'HOME',
@@ -62,70 +53,34 @@ export default function HomeLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { user, logout } = useAuthStore();
+
+  const onLogout = async () => {
+    await logout();
+  };
+
   return (
     <>
       <div className="bg-[#102D5D]">
-        <Sheet>
-          <div className="flex justify-end pt-2 pr-2">
-            <SheetTrigger className="lg:hidden">
-              <Menu size={30} className="text-white" />
-            </SheetTrigger>
-          </div>
-          <SheetContent className="gap-2">
-            <SheetHeader>
-              <SheetTitle>Menu</SheetTitle>
-              <SheetDescription></SheetDescription>
-            </SheetHeader>
-            <div className="hover:bg-accent py-2 px-4 rounded-md flex gap-2">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground">
-                <UserRound className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">AscencioTaxInc</span>
-                <span className="truncate text-xs">email@exmple.com</span>
-              </div>
-            </div>
-            <NavigationMenu>
-              <NavigationMenuList className="flex flex-col justify-start items-start gap-1 w-full">
-                <Link
-                  href="/auth/login"
-                  className="hover:bg-accent py-2 px-4 rounded-md text-sm w-full"
-                >
-                  LOGIN
-                </Link>
-                <Link
-                  href="/auth/register"
-                  className="hover:bg-accent py-2 px-4 rounded-md text-sm w-full"
-                >
-                  REGISTER
-                </Link>
-                {itemsSideMenu.map(({ url, title }) => (
-                  <Link
-                    key={url}
-                    href={url}
-                    className="hover:bg-accent py-2 px-4 rounded-md text-sm w-full"
-                  >
-                    {title}
-                  </Link>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
-          </SheetContent>
-        </Sheet>
-        <div className=" flex justify-center">
-          <div className=" flex items-end flex-wrap 2xl:max-w-[1536px]  overflow-hidden">
+        <HomeSidebar
+          itemsHomeMenu={itemsHomeMenu}
+          onLogout={onLogout}
+          user={user}
+        />
+        <header className="flex justify-center">
+          <div className="flex items-end flex-wrap 2xl:max-w-[1536px] overflow-hidden">
             <Image
               src={'/logo.jpg'}
               width={500}
               height={300}
               alt={'logo image'}
               priority
-              className="h-auto min-w-64"
+              className="h-auto w-auto min-w-64"
             />
             <div className="flex justify-end ml-auto">
-              <NavigationMenu className="hidden lg:block">
-                <NavigationMenuList>
-                  {itemsSideMenu.map(({ url, title }) => (
+              <NavigationMenu className="hidden lg:block h-full">
+                <NavigationMenuList className="">
+                  {itemsHomeMenu.map(({ url, title }) => (
                     <NavigationMenuItem key={url} className="mb-3 min-w-max">
                       <Link href={url} legacyBehavior passHref>
                         <NavigationMenuLink className="text-white px-3 hover:text-blue-600 transition-all">
@@ -135,25 +90,51 @@ export default function HomeLayout({
                     </NavigationMenuItem>
                   ))}
 
-                  <NavigationMenuItem className="mb-3 min-w-max">
-                    <Link href="/auth/login" legacyBehavior passHref>
-                      <NavigationMenuLink className="text-white px-3 hover:text-blue-600 transition-all">
-                        SIGN IN
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem className="mb-3 min-w-max">
-                    <Link href="/auth/register" legacyBehavior passHref>
-                      <NavigationMenuLink className="text-white px-3 hover:text-blue-600 transition-all">
-                        SIGN UP
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
+                  {!user && (
+                    <>
+                      <NavigationMenuItem className="mb-3 min-w-max">
+                        <Link href="/auth/login" legacyBehavior passHref>
+                          <NavigationMenuLink className="text-white px-3 hover:text-blue-600 transition-all">
+                            SIGN IN
+                          </NavigationMenuLink>
+                        </Link>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem className="mb-3 min-w-max">
+                        <Link href="/auth/register" legacyBehavior passHref>
+                          <NavigationMenuLink className="text-white px-3 hover:text-blue-600 transition-all">
+                            SIGN UP
+                          </NavigationMenuLink>
+                        </Link>
+                      </NavigationMenuItem>
+                    </>
+                  )}
+                  {user && (
+                    <>
+                      {user.roles.includes('admin') && (
+                        <NavigationMenuItem className="mb-3 min-w-max">
+                          <Link href="/dashboard" legacyBehavior passHref>
+                            <NavigationMenuLink className="text-white px-3 hover:text-blue-600 transition-all">
+                              ADMIN
+                            </NavigationMenuLink>
+                          </Link>
+                        </NavigationMenuItem>
+                      )}
+                      <NavigationMenuItem className="mt-auto">
+                        <Link
+                          href={'#'}
+                          className="text-white px-3 hover:text-blue-600 transition-all"
+                          onClick={onLogout}
+                        >
+                          LOGOUT
+                        </Link>
+                      </NavigationMenuItem>
+                    </>
+                  )}
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
           </div>
-        </div>
+        </header>
       </div>
       <main className="m-4 mt-4 lg:max-w-[1024px] lg:mx-auto">{children}</main>
     </>

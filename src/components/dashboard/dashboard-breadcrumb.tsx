@@ -1,3 +1,5 @@
+'use client';
+
 import { ModeToggle } from '@/components/ModeToggle';
 import {
   Breadcrumb,
@@ -9,6 +11,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import React from 'react';
 
 interface Props {
   items: Item[];
@@ -29,14 +32,14 @@ export default function DashboardBreadcrumb({ items }: Props) {
           <BreadcrumbList>
             {items.map((item, index) =>
               index !== items.length - 1 ? (
-                <>
-                  <BreadcrumbItem key={item.url} className="hidden md:block">
+                <React.Fragment key={item.url}>
+                  <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink href={item.url}>{item.name}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
-                </>
+                </React.Fragment>
               ) : (
-                <BreadcrumbItem key={item.url}>
+                <BreadcrumbItem key={item.name}>
                   <BreadcrumbPage>{item.name}</BreadcrumbPage>
                 </BreadcrumbItem>
               )

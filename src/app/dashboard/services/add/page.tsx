@@ -1,5 +1,5 @@
-import DashboardBreadcrumb from '@/components/dashboard-breadcrumb';
-import ServiceForm from '@/components/service-form';
+import DashboardBreadcrumb from '@/components/dashboard/dashboard-breadcrumb';
+import ServiceForm from '@/components/services/service-form';
 
 export default function AddService() {
   return (

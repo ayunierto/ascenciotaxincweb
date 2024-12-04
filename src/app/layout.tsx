@@ -14,6 +14,9 @@ const geistMono = localFont({
   weight: '100 900',
 });
 
+import { Toaster } from '@/components/ui/toaster';
+import AuthProvider from '@/provider/AuthProvider';
+
 export const metadata: Metadata = {
   title: 'AscencioTaxInc - Dashboard',
   description: 'Dashboard Ascencio Tax Inc',
@@ -29,14 +32,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+
+            <Toaster />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

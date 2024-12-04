@@ -1,4 +1,9 @@
-import { LoginForm } from '@/components/login-form';
+import { LoginForm } from '@/components';
+
+export const metadata = {
+  title: 'AscencioTaxInc - Login',
+  description: 'AscencioTaxInc - Login',
+};
 
 export default function LoginPage() {
   return (

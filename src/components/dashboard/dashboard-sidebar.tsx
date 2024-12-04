@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Folder,
   LayoutDashboard,
-  UserRound,
   Users,
 } from 'lucide-react';
 
@@ -31,14 +30,15 @@ import {
   CollapsibleContent,
 } from '@radix-ui/react-collapsible';
 import Link from 'next/link';
+import { useAuthStore } from '@/store/auth-store';
 
 // This is sample data.
 const data = {
-  user: {
-    name: 'John Doe',
-    email: 'john@example.com',
-    avatar: 'https://ui-avatars.com/api/?name=John+Doe',
-  },
+  // user: {
+  //   name: 'John Doe',
+  //   email: 'john@example.com',
+  //   avatar: 'https://ui-avatars.com/api/?name=John+Doe',
+  // },
 
   navMain: [
     {
@@ -94,6 +94,7 @@ const data = {
 export function DashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuthStore();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -103,12 +104,23 @@ export function DashboardSidebar({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground">
-                <UserRound className="size-4" />
-              </div>
+              {/* <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground"> */}
+              {/* <Image
+                src={'/logo.jpg'}
+                alt="logo"
+                width={100}
+                height={100}
+                className="size-4"
+              /> */}
+              {/* </div> */}
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">AscencioTaxInc</span>
-                <span className="truncate text-xs">email@exmple.com</span>
+                <Link
+                  href={'/'}
+                  className="truncate font-semibold uppercase text-center"
+                >
+                  AscencioTaxInc
+                </Link>
+                {/* <span className="truncate text-xs">email@exmple.com</span> */}
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -169,7 +181,7 @@ export function DashboardSidebar({
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
