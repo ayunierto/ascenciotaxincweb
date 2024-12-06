@@ -1,3 +1,4 @@
+import { getServices } from '@/actions/services/get-services';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,19 +10,18 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import { initialData } from '@/seed/seed-data';
 import { Video, VideoOff } from 'lucide-react';
 import Image from 'next/image';
 
-const services = initialData.services;
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getServices()
   return (
     <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-3 lg:gap-10">
       {services.map((service) => (
         <Card key={service.title} className="overflow-hidden">
           <Image
-            src={service.images[0]}
+            src={service.image}
             alt="service iamge"
             width={200}
             height={200}
@@ -29,7 +29,6 @@ export default function ServicesPage() {
           />
           <CardHeader>
             <CardTitle>{service.title}</CardTitle>
-            <CardDescription>{service.description}</CardDescription>
           </CardHeader>
           <CardContent>
             {service.isAvailableOnline ? (

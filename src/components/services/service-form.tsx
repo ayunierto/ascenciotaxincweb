@@ -19,6 +19,8 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '../ui/checkbox';
 import { Service } from '@/domain/entities/service';
 import { updateCreateService } from '../../actions/services/update-create';
+import { FilePenLine } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 interface Props {
   service?: Service;
@@ -42,15 +44,11 @@ export default function ServiceForm({ service }: Props) {
       required_error: 'Is Active is required',
       invalid_type_error: 'Is Active must be a boolean',
     }),
-    description: z.string().max(150, {
-      message: 'The description must have a maximum of 150 characters.',
-    }),
-    image: z
-      .instanceof(File)
-      .refine((file) => file.size < 2000000, {
-        message: 'Your image must be less than 2MB.',
-      })
-      .optional(),
+
+    image: z.union([
+      z.instanceof(File).optional(), // Tipo File
+      z.string(),
+    ]), // Array de strings
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -61,26 +59,31 @@ export default function ServiceForm({ service }: Props) {
       isAvailableOnline: service?.isAvailableOnline || false,
       isActive: service?.isActive || false,
       duration: service?.duration || '',
-      description: service?.description || '',
+      image: service ? service.image : undefined,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     const data = await updateCreateService(values);
-    console.log({ data });
+    if (data?.id) {
+      toast({
+        title: 'Success',
+        description: 'Saved service',
+      });
+    }
+    // console.log({ data });
   }
 
-  const serviceImage = service?.images[0].url || '/noImage.jpg';
+  const serviceImage = service?.image || '/noImage.jpg';
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mb-4">
         <div className="flex justify-end">
           <Button type="submit" variant={'secondary'}>
             {service ? 'Update' : 'Add'}
           </Button>
         </div>
-        <div>
+        <div className=" border relative max-w-fit">
           <Image
             alt="Service image"
             src={serviceImage}
@@ -89,28 +92,32 @@ export default function ServiceForm({ service }: Props) {
             className="w-auto h-auto rounded-md"
             priority
           />
-          <FormField
-            control={form.control}
-            name="image"
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            render={({ field: { value, onChange, ...fieldProps } }) => (
-              <FormItem className="relative top-0 right-0">
-                <FormLabel>Edit</FormLabel>
-                <FormControl>
-                  <Input
-                    {...fieldProps}
-                    type="file"
-                    accept="data:image/jpg"
-                    onChange={(event) =>
-                      onChange(event.target.files && event.target.files[0])
-                    }
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="absolute top-2 right-2">
+            <FormField
+              control={form.control}
+              name="image"
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              render={({ field: { value, onChange, ...fieldProps } }) => (
+                <FormItem>
+                  <FormLabel className="cursor-pointer rounded-full bg-[#0003] hover:bg-[#0005] flex p-2 transition-all ">
+                    <FilePenLine className=" " />
+                  </FormLabel>
+                  <FormControl className="hidden">
+                    <Input
+                      {...fieldProps}
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) =>
+                        onChange(event.target.files && event.target.files[0])
+                      }
+                    />
+                  </FormControl>
+                  <FormDescription />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
         <FormField
           control={form.control}

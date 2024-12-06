@@ -26,10 +26,10 @@ interface Props {
 export default function HomeSidebar({ user, itemsHomeMenu, onLogout }: Props) {
   return (
     <Sheet>
-      <div className="flex justify-end pt-2 pr-2">
+      <div className="flex justify-end pt-2 pr-2 gap-2">
         <ChangeTheme />
-        <SheetTrigger className="lg:hidden">
-          <Menu size={30} className="text-white" />
+        <SheetTrigger className="lg:hidden hover:bg-[#0003] rounded-md p-2" >
+          <Menu size={25} className="text-white" />
         </SheetTrigger>
       </div>
       <SheetContent className="gap-2 w-full sm:w-[540px]">

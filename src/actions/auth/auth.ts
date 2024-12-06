@@ -1,4 +1,4 @@
-import { AuthResponse } from '@/interfaces/auth.response';
+import { AuthResponse } from '@/interfaces';
 import { User } from '../../domain/entities/user';
 
 import * as dotenv from 'dotenv';

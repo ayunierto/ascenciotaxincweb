@@ -1,8 +1,8 @@
-import {Service} from '../../domain/entities/service';
-import {ServicesResponse} from '../interfaces/services.response';
+import { Service } from '@/domain/entities';
+import { ServiceResponse } from '@/interfaces';
 
 export class ServiceMapper {
-  static serviceToEntity(service: ServicesResponse): Service {
+  static serviceToEntity(service: ServiceResponse): Service {
     return {
       id: service.id,
       title: service.title,

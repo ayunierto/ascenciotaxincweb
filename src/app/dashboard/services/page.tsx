@@ -75,7 +75,7 @@ export default async function ServicesPage() {
                 <TableCell className="flex items-center gap-2">
                   <Avatar>
                     {}
-                    <AvatarImage src={service.images[0]?.url} />
+                    <AvatarImage src={service.image} />
                     <AvatarFallback>{service.title[0]}</AvatarFallback>
                   </Avatar>
                   {service.title}

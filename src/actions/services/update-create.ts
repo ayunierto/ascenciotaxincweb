@@ -1,22 +1,68 @@
-import { ServiceImage, Service } from '@/domain/entities/service';
+import { StorageAdapter } from '@/config/adapters/storage-adapter';
+import { Service } from '@/domain/entities/service';
+import { ServiceResponse } from '@/interfaces';
 
-export const updateCreateService = (service: Partial<Service>) => {
-  if (service.id) {
-    return updateService(service);
+export const updateCreateService = async (
+  service: Partial<ServiceResponse>
+) => {
+  if (service.id && service.id !== 'new') {
+    return await updateService(service);
+  }
+
+  if (service.id === 'new') {
+    return await createService(service);
   }
 
   throw new Error('Service is required');
 };
 
+const createService = async (service: Partial<Service>) => {
+  const token = localStorage.getItem('token');
+  try {
+    const checkedImage = await prepareImages(service.image);
+
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append(
+      'Authorization',
+      `Bearer ${StorageAdapter.getItem('token')}`
+    );
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/services`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: service.title,
+          isAvailableOnline: service.isAvailableOnline,
+          duration: service.duration,
+          description: '',
+          isActive: service.isActive,
+          images: [checkedImage],
+        }),
+        redirect: 'follow',
+      }
+    );
+
+    const data = response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // TODO: revisar si viene el usuario
 const updateService = async (service: Partial<Service>) => {
   const token = localStorage.getItem('token');
-  console.log(service);
-  const { id, images = [], ...rest } = service;
+  // console.log({service});
+  const { id, image = '', ...rest } = service;
 
   try {
-    const checkedImages = prepareImages(images);
-    console.log(checkedImages);
+    const checkedImage = await prepareImages(image);
 
     const data = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/services/${id}`,
@@ -27,7 +73,7 @@ const updateService = async (service: Partial<Service>) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          images: checkedImages,
+          images: [checkedImage],
           ...rest,
         }),
       }
@@ -40,8 +86,37 @@ const updateService = async (service: Partial<Service>) => {
   }
 };
 
-const prepareImages = (images: ServiceImage[]) => {
-  // todo: revisar los files
-
-  return images.map((image) => image.url);
+const prepareImages = async (
+  image: File | string | undefined
+): Promise<string> => {
+  if (!image) {
+    return '';
+  }
+  if (typeof image === 'object' && image instanceof File) {
+    return await uploadFile(image);
+  } else {
+    return image;
+  }
 };
+
+async function uploadFile(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/files/service`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+    if (response.ok) {
+      const data = await response.text();
+      return data;
+    } else {
+      return 'Error al subir el archivo';
+    }
+  } catch (error) {
+    return `No se pudo subir la imagen ${error}`;
+  }
+}
