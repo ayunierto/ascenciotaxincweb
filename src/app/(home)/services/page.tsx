@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -13,9 +12,8 @@ import {
 import { Video, VideoOff } from 'lucide-react';
 import Image from 'next/image';
 
-
 export default async function ServicesPage() {
-  const services = await getServices()
+  const services = await getServices();
   return (
     <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-3 lg:gap-10">
       {services.map((service) => (
@@ -26,6 +24,7 @@ export default async function ServicesPage() {
             width={200}
             height={200}
             className="w-full h-auto"
+            priority
           />
           <CardHeader>
             <CardTitle>{service.title}</CardTitle>

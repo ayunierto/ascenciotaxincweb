@@ -119,14 +119,18 @@ export default function HomeLayout({
                           </Link>
                         </NavigationMenuItem>
                       )}
-                      <NavigationMenuItem className="mt-auto">
-                        <Link
+                      <NavigationMenuItem className="mb-3 min-w-max">
+                        {/* <Link
                           href={'#'}
                           className="text-white px-3 hover:text-blue-600 transition-all"
+                          > */}
+                        <NavigationMenuLink
                           onClick={onLogout}
+                          className="text-white px-3 hover:text-blue-600 transition-all cursor-pointer"
                         >
                           LOGOUT
-                        </Link>
+                        </NavigationMenuLink>
+                        {/* </Link> */}
                       </NavigationMenuItem>
                     </>
                   )}

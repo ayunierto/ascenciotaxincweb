@@ -138,7 +138,7 @@ export function LoginForm() {
                   <Loader2 className="animate-spin" /> Please wait
                 </>
               ) : (
-                'Login'
+                'Sign In'
               )}
             </Button>
             {/* <Button variant="outline" className="w-full">

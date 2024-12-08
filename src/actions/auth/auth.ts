@@ -51,12 +51,17 @@ export const authRegister = async (
 ) => {
   email = email.toLocaleLowerCase();
   try {
-    const resp = await fetch(`${API_URL}/auth/signup`, {
+    const resp = await fetch(`http://localhost:3001/api/auth/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password, fullName, phoneNumber }),
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        fullName: fullName,
+        phoneNumber: phoneNumber,
+      }),
     });
     const data = await resp.json();
     if (data.token) {
