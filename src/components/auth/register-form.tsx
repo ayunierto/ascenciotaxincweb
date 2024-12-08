@@ -40,9 +40,15 @@ const formSchema = z.object({
   phone: z.string().min(2, {
     message: 'Phone number must be at least 2 characters.',
   }),
-  password: z.string().min(6, {
-    message: 'Password must be at least 6 characters.',
-  }),
+  password: z
+    .string()
+    .refine(
+      (value) =>
+        /(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(
+          value ?? ''
+        ),
+      'The password must have at least one uppercase letter, one lowercase letter, and one number.'
+    ),
 });
 
 export function RegisterForm() {
