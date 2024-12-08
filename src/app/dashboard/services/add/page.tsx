@@ -1,5 +1,7 @@
 import DashboardBreadcrumb from '@/components/dashboard/dashboard-breadcrumb';
+import LoadingPage from '@/components/loading';
 import ServiceForm from '@/components/services/service-form';
+import { Suspense } from 'react';
 
 export default function AddService() {
   return (
@@ -12,7 +14,9 @@ export default function AddService() {
         ]}
       />
       <main className="px-4">
-        <ServiceForm />
+        <Suspense fallback={<LoadingPage />}>
+          <ServiceForm />
+        </Suspense>
       </main>
     </>
   );

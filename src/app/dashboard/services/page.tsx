@@ -1,35 +1,64 @@
+'use client';
+
 import Link from 'next/link';
+import { toast } from '@/hooks/use-toast';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import DashboardBreadcrumb from '@/components/dashboard/dashboard-breadcrumb';
-
 import { getServices } from '@/actions/services/get-services';
+import DashboardServiceTable from '@/components/dashboard/services/dashboard-service-table';
+import { Suspense, useEffect, useState } from 'react';
+import { Service } from '@/domain/entities';
+import LoadingPage from '@/components/loading';
+import { deleteService } from '@/actions/services/delete-service';
 
-export default async function ServicesPage() {
-  const services = await getServices();
+export default function ServicesPage() {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDataAsync = async () => {
+      try {
+        const result = await getServices();
+        setServices(result);
+      } catch (err) {
+        setError(`Error fetching data ${err}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDataAsync();
+  }, []);
+
+  if (loading) {
+    return <LoadingPage />;
+  }
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  const onDeleteService = async (id: string) => {
+    const deletedService = await deleteService(id);
+
+    if (deletedService) {
+      toast({
+        description: `Deleted service ${deletedService.title}`,
+        variant: 'success',
+      });
+      setServices(services.filter((service) => service.id !== id));
+      return;
+    }
+
+    toast({
+      description: `Error deleteting service`,
+      variant: 'destructive',
+    });
+  };
 
   return (
-    <>
+    <Suspense fallback={<div>Loading ...</div>}>
       <DashboardBreadcrumb
         items={[
           { name: 'Dashboard', url: '/dashboard' },
@@ -45,74 +74,11 @@ export default async function ServicesPage() {
             </Button>
           </Link>
         </div>
-        <Table>
-          {services.length !== 0 ? (
-            <TableCaption>A list of your services</TableCaption>
-          ) : (
-            <TableCaption>
-              There are no services. Please create one{' '}
-              <Link
-                href={'/dashboard/services/add'}
-                className="text-blue-600 underline"
-              >
-                here
-              </Link>
-              .
-            </TableCaption>
-          )}
-          <TableHeader>
-            <TableRow>
-              <TableHead>Service</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Schedule</TableHead>
-              <TableHead>Appointment Staff</TableHead>
-              <TableHead className="text-right"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {services.map((service) => (
-              <TableRow key={service.title}>
-                <TableCell className="flex items-center gap-2">
-                  <Avatar>
-                    {}
-                    <AvatarImage src={service.image} />
-                    <AvatarFallback>{service.title[0]}</AvatarFallback>
-                  </Avatar>
-                  {service.title}
-                </TableCell>
-                <TableCell>Free</TableCell>
-                <TableCell>Show Availability</TableCell>
-                <TableCell>
-                  <Badge variant="secondary" className="mr-2">
-                    2
-                  </Badge>
-                  Staff
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <Link href={`/dashboard/services/edit/${service.id}`}>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                      </Link>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="focus:bg-red-500">
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <DashboardServiceTable
+          services={services}
+          deleteService={onDeleteService}
+        />
       </main>
-    </>
+    </Suspense>
   );
 }

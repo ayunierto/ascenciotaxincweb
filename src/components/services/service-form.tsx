@@ -67,8 +67,8 @@ export default function ServiceForm({ service }: Props) {
     const data = await updateCreateService(values);
     if (data?.id) {
       toast({
-        title: 'Success',
         description: 'Saved service',
+        variant: 'success',
       });
     }
     // console.log({ data });
