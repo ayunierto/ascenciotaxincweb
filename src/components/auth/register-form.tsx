@@ -37,7 +37,7 @@ const formSchema = z.object({
   email: z.string().email().min(2, {
     message: 'Email must be at least 2 characters.',
   }),
-  phone: z.string().min(2, {
+  phoneNumber: z.string().min(9, {
     message: 'Phone number must be at least 2 characters.',
   }),
   password: z
@@ -62,7 +62,7 @@ export function RegisterForm() {
     defaultValues: {
       fullName: '',
       email: '',
-      phone: '',
+      phoneNumber: '',
       password: '',
     },
   });
@@ -71,10 +71,15 @@ export function RegisterForm() {
     email,
     fullName,
     password,
-    phone,
+    phoneNumber,
   }: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const wasSuccessful = await register(fullName, email, phone, password);
+    const wasSuccessful = await register(
+      fullName,
+      email,
+      phoneNumber,
+      password
+    );
     setIsLoading(false);
 
     if (wasSuccessful) {
@@ -147,7 +152,7 @@ export function RegisterForm() {
             />
             <FormField
               control={form.control}
-              name="phone"
+              name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>

@@ -15,7 +15,7 @@ export default function DashboardLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (status !== 'authenticated' || !user?.roles.includes('admin')) {
+    if (status !== 'authenticated') {
       router.push('/auth/login');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -14,6 +14,7 @@ const returnUserToken = (data: AuthResponse) => {
     fullName: data.fullName,
     isActive: data.isActive,
     roles: data.roles,
+    phoneNumber: data.
   };
 
   return {
