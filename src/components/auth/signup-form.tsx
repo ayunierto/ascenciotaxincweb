@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/store/useAuthStore';
 import { useToast } from '@/hooks/use-toast';
 import {
   Form,
@@ -29,36 +29,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Loader2 } from 'lucide-react';
+import { SignupFormSchema } from '@/app/lib/definitions';
 
-const formSchema = z.object({
-  fullName: z.string().min(2, {
-    message: 'Full Name must be at least 10 characters.',
-  }),
-  email: z.string().email().min(2, {
-    message: 'Email must be at least 2 characters.',
-  }),
-  phoneNumber: z.string().min(9, {
-    message: 'Phone number must be at least 2 characters.',
-  }),
-  password: z
-    .string()
-    .refine(
-      (value) =>
-        /(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(
-          value ?? ''
-        ),
-      'The password must have at least one uppercase letter, one lowercase letter, and one number.'
-    ),
-});
-
-export function RegisterForm() {
+export function SignupForm() {
   const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const { register, status } = useAuthStore();
+  const { signup, status } = useAuthStore();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof SignupFormSchema>>({
+    resolver: zodResolver(SignupFormSchema),
     defaultValues: {
       fullName: '',
       email: '',
@@ -72,25 +52,24 @@ export function RegisterForm() {
     fullName,
     password,
     phoneNumber,
-  }: z.infer<typeof formSchema>) {
+  }: z.infer<typeof SignupFormSchema>) {
     setIsLoading(true);
-    const wasSuccessful = await register(
-      fullName,
-      email,
-      phoneNumber,
-      password
-    );
+    const response = await signup(fullName, email, phoneNumber, password);
     setIsLoading(false);
 
-    if (wasSuccessful) {
+    if (response?.error) {
+      toast({
+        title: response.error,
+        description: response.message,
+        variant: 'destructive',
+      });
       return;
     }
 
     toast({
-      title: 'Error',
-      description:
-        'Oops, something is wrong. Please contact the administrator.',
-      variant: 'destructive',
+      title: 'Success',
+      description: `Welcome ${response?.fullName}`,
+      variant: 'success',
     });
   }
 

@@ -30,7 +30,7 @@ import {
   CollapsibleContent,
 } from '@radix-ui/react-collapsible';
 import Link from 'next/link';
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/store/useAuthStore';
 
 // This is sample data.
 const data = {

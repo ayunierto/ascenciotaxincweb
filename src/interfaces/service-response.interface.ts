@@ -1,3 +1,5 @@
+import { User } from '@/domain/entities';
+
 export interface ServiceResponse {
   id: string;
   title: string;
@@ -12,12 +14,4 @@ export interface ServiceResponse {
 interface Images {
   id: string;
   url: string;
-}
-
-export interface User {
-  id: string;
-  email: string;
-  fullName: string;
-  isActive: boolean;
-  roles: string[];
 }

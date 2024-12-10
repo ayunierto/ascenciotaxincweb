@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/store/useAuthStore';
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -46,7 +46,7 @@ export function LoginForm() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { login, status, user } = useAuthStore();
+  const { signin, status, user } = useAuthStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,17 +58,22 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const wasSuccessful = await login(values.email, values.password);
+    const response = await signin(values.email, values.password);
     setIsLoading(false);
 
-    if (wasSuccessful) {
+    if (response?.error) {
+      toast({
+        title: response.error,
+        description: response.message,
+        variant: 'destructive',
+      });
       return;
     }
 
     toast({
-      title: 'Error',
-      description: 'Incorrect credentials',
-      variant: 'destructive',
+      title: 'Success',
+      description: `Welcome back ${response?.fullName}`,
+      variant: 'success',
     });
   }
 

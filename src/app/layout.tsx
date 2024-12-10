@@ -15,7 +15,6 @@ const geistMono = localFont({
 });
 
 import { Toaster } from '@/components/ui/toaster';
-import AuthProvider from '@/provider/AuthProvider';
 
 export const metadata: Metadata = {
   title: 'AscencioTaxInc - Dashboard',
@@ -38,11 +37,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            {children}
+          {children}
 
-            <Toaster />
-          </AuthProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

@@ -66,7 +66,7 @@ export default function ServicesPage() {
         ]}
       />
 
-      <main className="px-4 space-y-4">
+      <div className="px-4 space-y-4">
         <div className="flex justify-end">
           <Link href={'services/add'}>
             <Button variant={'secondary'}>
@@ -78,7 +78,7 @@ export default function ServicesPage() {
           services={services}
           deleteService={onDeleteService}
         />
-      </main>
+      </div>
     </Suspense>
   );
 }

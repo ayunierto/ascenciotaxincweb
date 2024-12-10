@@ -2,7 +2,7 @@
 
 import React, { PropsWithChildren, useEffect } from 'react';
 
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/store/useAuthStore';
 import LoadingPage from '@/components/loading';
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {

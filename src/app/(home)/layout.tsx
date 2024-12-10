@@ -9,7 +9,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/store/useAuthStore';
 import { ItemsHomeMenu } from '@/interfaces';
 import HomeSidebar from '@/components/home/sidebar';
 
